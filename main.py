@@ -1,12 +1,12 @@
 from data.load_data import load_price_data
-from strategies.random_strategy import RandomStrategy
+from strategies.ema_crossover import EMACrossoverStrategy
 from engine.backtest import run_backtest
 from analysis.stats import compute_stats
 from analysis.plot import plot_equity_curve
 
 def main():
     candles = load_price_data()
-    strategy = RandomStrategy(prob=0.05)
+    strategy = EMACrossoverStrategy(short_period=20, long_period=50)
     portfolio = run_backtest(
         candles,
         strategy,
