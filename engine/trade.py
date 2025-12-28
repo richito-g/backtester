@@ -1,9 +1,10 @@
 from engine.candle import Candle
 
 class Trade:
-    def __init__(self, buy_price, buy_index, profit_perc, stop_loss_perc):
+    def __init__(self, buy_price, buy_index, qty ,profit_perc, stop_loss_perc):
       self.buy_price = buy_price
       self.buy_index = buy_index
+      self.qty = float(qty)
 
       self.profit_perc = profit_perc
       self.stop_loss_perc = stop_loss_perc
@@ -35,6 +36,6 @@ class Trade:
     def close_trade(self, sell_price, sell_index):
       self.sell_price = sell_price
       self.sell_index = sell_index
-      self.profit = self.sell_price - self.buy_price
+      self.profit = self.qty *(self.sell_price - self.buy_price)
 
       self.is_closed = True

@@ -12,7 +12,8 @@ def main():
         strategy,
         initial_cash = 1000000,
         profit_perc = .02,
-        stop_loss_perc = .01
+        stop_loss_perc = .01,
+        fraction_of_cash = .25
     )
     
     stats = compute_stats(portfolio, candles)

@@ -7,7 +7,8 @@ def run_backtest(
     strategy: BaseStrategy,
     initial_cash: float,
     profit_perc: float,
-    stop_loss_perc: float
+    stop_loss_perc: float,
+    fraction_of_cash: float
 ) -> Portfolio:
 
   portfolio = Portfolio(initial_cash)
@@ -17,7 +18,8 @@ def run_backtest(
       portfolio.enter_trade(
           candle,
           profit_perc=profit_perc,
-          stop_loss_perc=stop_loss_perc
+          stop_loss_perc=stop_loss_perc,
+          fraction_of_cash=fraction_of_cash
       )
 
     portfolio.update_on_candle(candle)

@@ -14,19 +14,30 @@ class Portfolio:
   def has_open_position(self) -> bool:
     return self.open_trade is not None and not self.open_trade.is_closed
 
-  def enter_trade(self, candle: Candle, profit_perc: float, stop_loss_perc: float) ->bool:
+  def enter_trade(self, candle: Candle, profit_perc: float, stop_loss_perc: float, fraction_of_cash: float) ->bool:
+    if fraction_of_cash<=0 or fraction_of_cash >1:
+      return False
+    
     if self.has_open_position():
       return False
 
     buy_price = candle.open
-    if buy_price > self.cash:
+
+    spend = self.cash*fraction_of_cash
+
+    qty = spend/buy_price
+    
+    cost = buy_price*qty
+
+    if cost > self.cash:
       return False
 
-    self.cash -= buy_price
+    self.cash -= cost
 
     self.open_trade = Trade(
         buy_price = buy_price,
         buy_index = candle.index,
+        qty = qty,
         profit_perc = profit_perc,
         stop_loss_perc = stop_loss_perc
     )
@@ -37,7 +48,7 @@ class Portfolio:
     if self.open_trade is not None and not self.open_trade.is_closed:
       closed_now = self.open_trade.try_to_close(candle)
       if closed_now:
-        self.cash += self.open_trade.sell_price
+        self.cash += self.open_trade.qty * self.open_trade.sell_price
         self.closed_trades.append(self.open_trade)
         self.open_trade = None
 
@@ -46,5 +57,5 @@ class Portfolio:
   def equity(self, candle:Candle) ->float:
     eq =self.cash
     if self.open_trade is not None and not self.open_trade.is_closed:
-      eq += candle.close
+      eq += self.open_trade.qty*candle.close
     return eq
