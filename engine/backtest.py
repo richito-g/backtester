@@ -19,7 +19,8 @@ def run_backtest(
           candle,
           profit_perc=profit_perc,
           stop_loss_perc=stop_loss_perc,
-          fraction_of_cash=fraction_of_cash
+          fraction_of_cash=fraction_of_cash,
+          fee_rate = .0005
       )
 
     portfolio.update_on_candle(candle)
