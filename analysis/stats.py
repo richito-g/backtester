@@ -5,6 +5,11 @@ from engine.stats import Stats
 
 def compute_stats(portfolio: Portfolio, candles: list[Candle]) -> Stats:
   trades = portfolio.closed_trades
+
+  gross_profit = sum(t.profit for t in trades if t.profit> 0)
+  gross_loss = -sum(t.profit for t in trades if t.profit<0)
+  profit_factor = (gross_profit/gross_loss) if gross_loss > 0 else float("inf")
+
   num_trades = len(trades)
 
   total_profit = sum(getattr(t, "profit", 0.0) for t in trades)
@@ -33,7 +38,8 @@ def compute_stats(portfolio: Portfolio, candles: list[Candle]) -> Stats:
       initial_cash=portfolio.initial_cash,
       total_profit=total_profit,
       max_drawdown=max_dd,
-      max_drawdown_abs=max_dd_abs
+      max_drawdown_abs=max_dd_abs,
+      profit_factor=profit_factor
   )
 
 def compute_max_drawdown(equities: list[float]) ->tuple[float, float]:
